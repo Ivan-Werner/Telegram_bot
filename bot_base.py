@@ -1,5 +1,6 @@
 import logging
 from http.client import responses
+from traceback import print_tb
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -61,6 +62,7 @@ def main():
     """Запуск бота"""
     application = Application.builder().token(BOT_TOKEN).build()
 
+    #Обработчики команд
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("about", about_command))
@@ -69,4 +71,10 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     #Обработчик ошибок
-    application.add
+    application.add_handler(error_handler)
+
+    print("Бот запущен...")
+    application.run_polling()
+
+    if __name__ == "__main__":
+        main()
