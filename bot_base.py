@@ -27,7 +27,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     /start - начать работу
     /help - получить помощь
     /about - о боте
-    
+
     Просто напиши мне что-нибудь, и я отвечу!
     """
     await update.message.reply_text(help_text)
@@ -71,10 +71,12 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     #Обработчик ошибок
-    application.add_handler(error_handler)
+    application.add_error_handler(error_handler)
 
     print("Бот запущен...")
     application.run_polling()
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
+
+
