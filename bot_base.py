@@ -1,4 +1,6 @@
 import logging
+from http.client import responses
+
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -38,4 +40,33 @@ async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработка текстовых сообщений"""
-    user
+    user_message = update.message.text.lower()
+    if 'привет' in user_message:
+        response = "И тебе привет!"
+    elif 'как дела' in user_message:
+        response = "Отлично! А у тебя?"
+    elif 'пока' in user_message:
+        response = "До свидания! Жду твоего возвращения"
+    else:
+        response = f"Вы написали: '{update.message.text}'\nПопробуйте команду /help"
+
+    await update.message.reply_text(response)
+
+
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработка ошибок"""
+    logging.error(f"Ошибка: {context.error}")
+
+def main():
+    """Запуск бота"""
+    application = Application.builder().token(BOT_TOKEN).build()
+
+    application.add_handler(CommandHandler("start", start_command))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("about", about_command))
+
+    #Обработчик текстовых сообщений
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+    #Обработчик ошибок
+    application.add
